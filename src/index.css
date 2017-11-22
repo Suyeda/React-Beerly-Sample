@@ -1,0 +1,153 @@
+html, body {
+  margin: 0px;
+  padding: 0px;
+  border: 0px;
+}
+
+#header {
+  border-bottom: 1px solid black;
+  height: 25px;
+  padding: 5%;
+}
+
+#header .companyName {
+  display: inline-block;
+  height: 50%;
+  vertical-align: top;
+}
+
+#header .companyName h1{
+  display: inline-block;
+  font-family: 'Vollkorn SC', serif;
+  margin: auto;
+}
+
+#header .cartSection {
+  display: inline-block;
+  float: right;
+  height: 50%;
+}
+
+#header .cartSection .circle, img{
+  display: inline-block;
+  vertical-align: top;
+}
+
+#header .cartSection h1{
+  margin: 10px;
+  vertical-align: middle;
+}
+
+#header .cartSection img{
+  height: 50px;
+  width: 50px;
+  vertical-align: top;
+}
+
+#header .cartSection .circle {
+  border-radius: 20px;
+  background: #f06292;
+  display: inline-block;
+  font-family: 'Open Sans', sans-serif;
+  line-height: 35px;
+  height: 35px;
+  width: 35px;
+  margin-left: 5px;
+  text-align: center;
+}
+
+#displayBasket {
+  font-family: 'Open Sans', sans-serif;
+  font-family: 'Vollkorn SC', serif;
+  text-align: center;
+  margin: 10px;
+  height: 350px;
+  overflow: scroll;
+  border-bottom: 1px solid black;
+}
+
+#displayBasket .brewCompany .title{
+  font-size: 20px;
+}
+
+.brewCompany {
+  margin-bottom: 50px;
+}
+
+.customButton{
+  background-color: darkturquoise;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+  padding: 5px;
+  margin-left: 10px;
+}
+
+.tempCart {
+  margin: auto;
+  margin-top: 15px;
+  width: 80%;
+}
+
+.drinkCard {
+  background-color: antiquewhite;
+  display: inline-block;
+  float: left;
+  height: 200px;
+  width: auto;
+  margin: 0 5px;
+ }
+
+ .drinkCard .removeBtn {
+  color: darkred;
+  text-align: right;
+}
+.drinkCard span{
+  display: block;
+}
+
+.drinkCard img {
+  height: 150px;
+  width: 100px;
+}
+
+.selectedItems .condition {
+  margin-bottom: 10px;
+}
+
+ #beerSelection{
+  width: 85%;
+  margin: 0 7.5%;
+ }
+
+.categoryRow {
+  background-color: #E7E4DD;
+  display: block;
+ }
+
+.categoryRow h1{
+    font-family: 'Vollkorn SC', serif;
+    text-align: center;
+}
+
+ .beerCard {
+  display: inline-block;
+  margin: 1%;
+  width: 31%;
+  text-align: center;
+ }
+
+.categoryRow img{
+  display: block;
+  margin: auto;
+  
+ }
+
+.categoryRow .addToCartBtn {
+  display: inline-block;
+  cursor: pointer;
+  border: 2px solid black;
+  border-radius: 5px;
+  background-color: white;
+  padding: 5px;
+}
