@@ -22,10 +22,13 @@ class FilterableProductTable extends React.Component {
 	render(){
 		return(
 			<div>
-				<SearchBar checkBox={this.boxChecker} inputCheck={this.inputChecker}></SearchBar>
+				<SearchBar checkBox={this.boxChecker} inputCheck={this.inputChecker} />
 				<br />
-				<ProductTable filterText={this.state.filterText}
-				 isChecked={this.state.checked} itemData={this.props.itemData}></ProductTable>
+				<ProductTable 
+					filterText={this.state.filterText}
+				 	isChecked={this.state.checked} 
+					itemData={this.props.itemData} 
+				/>
 			</div>
 		)
 	}
@@ -54,7 +57,7 @@ class SearchBar extends React.Component {
 
 class ProductTable extends React.Component {
 	render(){
-		const row1 = [],
+		const row1 = [], //make better names what do the rows represent
 		row2 = [];
 		let storeItems = this.props.itemData;
 
@@ -90,13 +93,14 @@ class ProductTable extends React.Component {
 
 class ProductCategoryRow extends React.Component {
 	render() {
-		const rowHeader = this.props.rowHead,
+		const rowHeader = this.props.rowHead, // don't always have to set it to a variable, can just directly use it in component
 		storeItems = this.props.storeItems;
 		return(
 			<div>
-				<td><b>{rowHeader}</b></td>
-				<ProductRow isChecked={this.props.isChecked} 
-				shopItems={storeItems}></ProductRow>
+				<td>
+					<b>{this.props.rowHead}</b>
+				</td>
+				<ProductRow isChecked={this.props.isChecked} shopItems={storeItems} />
 			</div>
 		)
 		
@@ -107,15 +111,14 @@ class ProductRow extends React.Component {
 	render() {
 		const resources = this.props.shopItems;
 		const singleData = resources.map((item) => {
-				if(this.props.isChecked && item.stocked === false){
-					return <div></div>;
-				}
-				else {
-					return <div>
-								<td key={item.price}>{item.name}</td>
-								<td>{item.price}</td>
-							</div>;
-				}
+			return this.props.isChecked && !item.stocked
+				? <div />
+				: (
+					<div>
+						<td key={item.price}>{item.name}</td>
+						<td>{item.price}</td>
+					</div>
+				);
 			})
 		
 		return(
