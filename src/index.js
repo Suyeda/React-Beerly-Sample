@@ -7,67 +7,50 @@ class Brewery extends React.Component {
 		super(props);
 			this.state = {
 				allowCheckout: false,
-				checkoutCart: 0,
-				uniqueCheckout: 0,
-				beerInventory: 12,
+				checkoutCart: 0,  //i can't tell what this state does by the name
+				uniqueCheckout: 0,  //this isnt too helpful/descriptive either
+				beerInventory: 12,  //this never changes, prob not a state either, just a CONST
 				itemsInCart: {},
-				storeItemCategory: this.props.beerWarehouse,
+				storeItemCategory: this.props.beerWarehouse,  //this never changes, does it need to be a state
 			}
 	}
-
+	
+	// can u go over 12 beers?
 	addToBasket = (beer) => {
-		let lastState = {...this.state.itemsInCart};
-		let lastCheck = this.state.uniqueCheckout;
-		let currentBeer = this.state.itemsInCart[beer];
-
-		if(currentBeer === undefined || currentBeer === 0){
-			lastState[beer] = 1;
-			lastCheck += 1;
-		}
-		else {
-			lastState[beer] += 1;
+		let updatedItemsInCart = {...this.state.itemsInCart};
+		let uniqueCheckout = this.state.uniqueCheckout;
+		if (updatedItemsInCart[beer]) {
+			updatedItemsInCart[beer]++;
+		} else {
+			uniqueCheckout++;
+			updatedItemsInCart[beer] = 1;
 		}
 		this.setState({
-			itemsInCart: lastState,
-			uniqueCheckout: lastCheck
+			itemsInCart: updatedItemsInCart[beer]++,
+			allowCheckout: uniqueCheckout >= 4,
+			uniqueCheckout: uniqueCheckout,
 		});
-
-		if(lastCheck >= 4){
-			this.setState({
-				allowCheckout: true,
-			})
-		}
-
 	};
 
+	// what happens if nothing in cart or uniquecheckout is 0 when attempting to remove
 	removeFromBasket = (beer) => {
-		let lastState = {...this.state.itemsInCart};
-		let lastCheck = this.state.uniqueCheckout;
-		lastCheck -= 1;
-
-		lastState[beer] = 0;
+		let updatedItemsInCart = {...this.state.itemsInCart};
+		updatedItemsInCart[beer] = 0;
 		this.setState({
-			itemsInCart: lastState,
-			uniqueCheckout: lastCheck,
+			itemsInCart: updatedItemsInCart,
+			uniqueCheckout: this.state.uniqueCheckout - 1,
+			allowCheckout: this.state.uniqueCheckout > 4,
 		});
-
-		if(lastCheck < 4){
-			this.setState({
-				allowCheckout: false,
-			})
-		}
-
 	};
 
 	checkoutFromBasket = (items) => {
-		let newState = {};
 		let count = this.state.checkoutCart;
-		for(let item in items){
-			count += items[item];
+		for(let itemName in items){
+			count += items[itemName];
 		}
 
 		this.setState({
-			itemsInCart: newState,
+			itemsInCart: {},
 			uniqueCheckout: 0,
 			checkoutCart: count,
 		})
@@ -77,15 +60,19 @@ class Brewery extends React.Component {
 		return(
 			<div>
 				<Header checkoutCart={this.state.checkoutCart} />
-				<DisplayBasket allowCheckout={this.state.allowCheckout}
-							   uniqueCheckout={this.state.uniqueCheckout}
-							   itemsInCart={this.state.itemsInCart} 
-				               beerInventory={this.state.beerInventory}
-				               removeFromBasket={this.removeFromBasket}
-				               checkoutFromBasket={this.checkoutFromBasket}
-				               updateCheckoutCart={this.updateCheckoutCart} />
-				<BeerInventory storeItemCategory={this.state.storeItemCategory}
-							   addToBasket={this.addToBasket} />
+				<DisplayBasket 
+					allowCheckout={this.state.allowCheckout}
+					uniqueCheckout={this.state.uniqueCheckout}
+					itemsInCart={this.state.itemsInCart} 
+				  beerInventory={this.state.beerInventory}
+				  removeFromBasket={this.removeFromBasket}
+				  checkoutFromBasket={this.checkoutFromBasket}
+				  updateCheckoutCart={this.updateCheckoutCart} 
+				/>
+				<BeerInventory 
+			  	storeItemCategory={this.state.storeItemCategory}
+					addToBasket={this.addToBasket} 
+				/>
 			</div>
 		)
 	}
@@ -114,12 +101,20 @@ class Header extends React.Component {
 class DisplayBasket extends React.Component {
 
 	render(){	
-		let itemsInCart = this.props.itemsInCart;
-		let currentBasket = Object.keys(itemsInCart).map((beer, quantity) => {
+		const {
+			itemsInCart, 
+			removeFromBasket, 
+			allowCheckout, 
+			checkoutFromBasket, 
+			itemsInCart, 
+			beerInventory, 
+			uniqueCheckout,
+		} = this.props;
+		let currentBasket = Object.keys(itemsInCart).map((beer, quantity) => {  //i dont think quantity is what u think it is, it's an index
 			if(itemsInCart[beer] > 0){
 				return(
 					<div className="drinkCard">
-					<span className="removeBtn" onClick={() => this.props.removeFromBasket(beer)}>X</span>
+					<span className="removeBtn" onClick={() => removeFromBasket(beer)}>X</span>
 						<img src={require("./images/" + beer + ".jpg")} alt={"testImage"}/>
 						<span>Qty: {itemsInCart[beer]}</span>
 					</div>
@@ -127,23 +122,18 @@ class DisplayBasket extends React.Component {
 			}
 		});
 
-		let checkBtn = null;
-		if(this.props.allowCheckout === true){
-			checkBtn = <span className="customButton" onClick={() => this.props.checkoutFromBasket(this.props.itemsInCart)}>Checkout</span>
-		}
-		else {
-			checkBtn = <div />
-		}
-
 		return(
 			<div id="displayBasket">
 				<div className="brewCompany">
 					<span className="title"><b>Sean's Brewing Company</b></span><br />
-					<span><b>{this.props.beerInventory}</b> beers to choose from!</span>
+					<span><b>{beerInventory}</b> beers to choose from!</span>
 				</div>
 				<div className="selectedItems">
-					<span className="condition"><b>Your Cart has {this.props.uniqueCheckout} / 4 unique selections</b></span>
-						{checkBtn}
+					<span className="condition"><b>Your Cart has {uniqueCheckout} / 4 unique selections</b></span>
+						{allowCheckout ? (
+								<span className="customButton" onClick={() => checkoutFromBasket(itemsInCart)}>Checkout</span>
+							) : <div />
+						}
 					<div className="tempCart">
 						{currentBasket}
 					</div>
@@ -157,6 +147,7 @@ class DisplayBasket extends React.Component {
 class BeerInventory extends React.Component {
 
 	render(){
+		//grab the props the same way as prev ious component
 		const itemList = this.props.storeItemCategory;
 		let beerSection = Object.keys(itemList).map((beerTypes, index) => {
 			let currentType = itemList[beerTypes];
