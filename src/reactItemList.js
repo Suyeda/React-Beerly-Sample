@@ -22,10 +22,13 @@ class FilterableProductTable extends React.Component {
 	render(){
 		return(
 			<div>
-				<SearchBar checkBox={this.boxChecker} inputCheck={this.inputChecker}></SearchBar>
+				<SearchBar checkBox={this.boxChecker} inputCheck={this.inputChecker}/>
 				<br />
-				<ProductTable filterText={this.state.filterText}
-				 isChecked={this.state.checked} itemData={this.props.itemData}></ProductTable>
+				<ProductTable 
+					filterText={this.state.filterText}
+				 	isChecked={this.state.checked} 
+				 	itemData={this.props.itemData}
+				 />
 			</div>
 		)
 	}
@@ -54,16 +57,16 @@ class SearchBar extends React.Component {
 
 class ProductTable extends React.Component {
 	render(){
-		const row1 = [],
-		row2 = [];
+		const sportingItems = [],
+		electronicsItems = [];
 		let storeItems = this.props.itemData;
 
 		for(let i=0; i<storeItems.length; i++){
 			if(storeItems[i].category === "Sporting Goods"){
-				row1.push(storeItems[i]);
+				sportingItems.push(storeItems[i]);
 			}
 			else{
-				row2.push(storeItems[i]);
+				electronicsItems.push(storeItems[i]);
 			}
 		}
 
@@ -76,11 +79,11 @@ class ProductTable extends React.Component {
 					</tr>
 					<tr>
 						<ProductCategoryRow rowHead="Sporting Goods" isChecked={this.props.isChecked} 
-						storeItems={row1}></ProductCategoryRow>
+						storeItems={sportingItems} />
 					</tr>
 					<tr>
 						<ProductCategoryRow rowHead="Electronics" isChecked={this.props.isChecked} 
-						storeItems={row2}></ProductCategoryRow>
+						storeItems={electronicsItems} />
 					</tr>
 				</tbody>
 			</table>
@@ -90,16 +93,16 @@ class ProductTable extends React.Component {
 
 class ProductCategoryRow extends React.Component {
 	render() {
-		const rowHeader = this.props.rowHead,
-		storeItems = this.props.storeItems;
 		return(
 			<div>
-				<td><b>{rowHeader}</b></td>
+				<td>
+					<b>{this.props.rowHead}</b>
+				</td>
 				<ProductRow isChecked={this.props.isChecked} 
-				shopItems={storeItems}></ProductRow>
+							shopItems={this.props.storeItems}
+				/>
 			</div>
 		)
-		
 	}
 }
 
@@ -107,15 +110,14 @@ class ProductRow extends React.Component {
 	render() {
 		const resources = this.props.shopItems;
 		const singleData = resources.map((item) => {
-				if(this.props.isChecked && item.stocked === false){
-					return <div></div>;
-				}
-				else {
-					return <div>
-								<td key={item.price}>{item.name}</td>
-								<td>{item.price}</td>
-							</div>;
-				}
+			return this.props.isChecked && !item.stocked
+			? <div />
+			: (
+				<div>
+					<td key={item.price}>{item.name}</td>
+					<td>{item.price}</td>
+				</div>
+				);
 			})
 		
 		return(
