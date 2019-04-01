@@ -14,9 +14,9 @@ class Board extends React.Component {
 	renderSquare = (i) => {
       return (
       	<Square
-       	 value={this.props.squares[i]}
-     	 onClick={() => this.props.onClick(i)}
-     	/>
+       		value={this.props.squares[i]}
+     	 		onClick={() => this.props.onClick(i)}
+     		/>
       );
     }
 
@@ -84,11 +84,16 @@ class Game extends React.Component {
     	const current = history[this.state.stepNumber];
     	const winner = calculateWinner(current.squares);
 
-    	const moves = history.map((step, move) => {
+    	const moves = history.map((step, move) => {  //again i think move is the index not a value that represents anything
     		const desc = move ? 'Go to move #' + move : 'Go to game start';
 	    	return  (
 	    		<li key={move}>
-	    			<button onClick={() => this.jumpTo(move)}>{desc}</button>
+	    			<button onClick={() => this.jumpTo(move)}>{desc}</button> //defining jumpTo as a property initializer autobinds, so you dont need arrow function again
+						//this is what it should look like. but how do u pass the step parameter? you need to define a new component that
+				    //accepts step as a prop. so ur hypothetical component might look like
+						// <FancyButton step={step} desc={desc} onClick={this.jumpTo} />
+																
+						<button onClick={this.jumpTo}>{desc}</button>										
 	    		</li>
 	    	);
     	});
@@ -116,6 +121,18 @@ class Game extends React.Component {
 	      </div>
 	    );
   }
+}
+
+class FancyButton extends React.Component {
+	
+	handleClick = () => {
+		this.props.onClick(this.props.step);
+	}
+	
+	render() {
+		<button onClick={this.handleClick}>{this.props.desc}</button>	
+	}
+	
 }
 
 // ========================================
